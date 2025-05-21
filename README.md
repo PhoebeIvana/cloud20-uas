@@ -3,7 +3,7 @@
 ## Group 20:
 - George William Thomas Gonanta - 2206024253
 - Phoebe Ivana - 2206820320
-- Kania Aidila Firka - 2206062983
+- Kania Aidilla Firka - 2206062983
 - Darren Nathanael Boentara - 2206059490
 ---
 
@@ -229,13 +229,13 @@ sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
 
-# Apache CloudStack Zone Creation on Ubuntu
+# Creating A Zone
 
 This guide documents the process of creating a new zone in Apache CloudStack after a successful installation and login. Screenshots are provided in this repository for each major step.
 
 ---
 
-## Step-by-Step: Zone Creation Wizard
+## Step-by-Step Guide:
 
 ### 1️. Zone Type
 The zone type defines the architecture of the data center.
@@ -365,4 +365,44 @@ Once launched, the zone becomes active and available for deploying virtual machi
 
 ---
 
-📸 _Refer to the screenshots in this repo for visual references to each step._
+# Registering an ISO
+
+Once the zone has been successfully created and enabled, the next step is to register an ISO. This ISO will later be used to install virtual machines (VMs) in the zone we just set up.
+
+
+## Navigation Path:
+`Image ➝ ISO ➝ Register ISO`
+
+## Step-by-Step Guide:
+
+![Image](https://github.com/user-attachments/assets/e47061eb-9f5c-4535-a597-658277ab7400)
+
+1. **URL**  
+   Enter the direct download link for the ISO:  
+   `https://releases.ubuntu.com/noble/ubuntu-24.04.2-live-server-amd64.iso`  
+
+2. **Name**  
+   Fill in a descriptive name for the ISO:  `ubuntu-server`
+
+3. **Description**  
+   Provide a brief description:  `Ubuntu Server`
+
+4. **Direct Download**  
+   Leave this option **disabled** (grey toggle).  
+   > If enabled, CloudStack will automatically fetch the ISO from the URL.
+
+5. **Zone**  
+   Select the zone that was created earlier: `zone-20`
+
+6. **Bootable**  
+   Enable this option (blue toggle).  
+   > This marks the ISO as bootable so it can be used to install VMs.
+
+7. **OS Type**  
+   Select the appropriate operating system:  `Other Ubuntu (64-bit)`
+
+---
+
+## Note:
+All other fields not mentioned above should be **left with their default values** unless there are specific advanced configurations required.
+
