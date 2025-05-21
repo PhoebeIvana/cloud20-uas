@@ -228,3 +228,141 @@ echo "NEED_STATD=yes" >> /etc/default/nfs-common
 sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
+
+# Apache CloudStack Zone Creation on Ubuntu
+
+This guide documents the process of creating a new zone in Apache CloudStack after a successful installation and login. Screenshots are provided in this repository for each major step.
+
+---
+
+## Step-by-Step: Zone Creation Wizard
+
+### 1️. Zone Type
+The zone type defines the architecture of the data center.
+
+![Image](https://github.com/user-attachments/assets/6e00b2af-5d35-46cf-be23-8eaeed7ab9ca)
+
+- Choose zone type:  
+  ✅ **Core**  
+  _(The other option is Edge; edge is for simplified setups close to the user)_
+
+---
+
+### 2️. Core Zone Type
+Network model determines how networking will be managed in the zone.
+
+![Image](https://github.com/user-attachments/assets/f373538c-709d-4179-be59-62b26b6d2d23)
+
+- Select the network model:  
+  ✅ **Advanced**
+  _(The other option is Basic; for this setup we use Advanced for more control and flexibility)_
+
+---
+
+### 3. Zone Details
+Zone details define the basic identity and networking settings of the zone.
+
+![Image](https://github.com/user-attachments/assets/2fc9c721-4b88-47c4-99ce-b81172a06eab)
+
+- **Zone Name**: `zone-20`
+- **IPv4 DNS 1**: `8.8.8.8`
+- **Internal DNS 1**: `192.168.1.1` (Router's IP)
+- **Guest CIDR Address**: Use default (e.g., `10.1.1.0/24`)
+- **Hypervisor**: `KVM`
+
+---
+
+### 4️. Network
+
+#### Physical Network (Default)
+The physical network setting is left at its default configuration because no custom physical layout or hardware-specific settings are required for this setup.
+
+![Image](https://github.com/user-attachments/assets/8a7a5ab0-3cc1-4336-94ec-8de48b497716)
+
+#### Public Traffic
+Public traffic settings define how external (public) network access is handled.
+
+![Image](https://github.com/user-attachments/assets/84bad439-e77e-429f-a55d-0de6d39d3b3f)
+
+- **Gateway**: `192.168.1.1`
+- **Netmask**: `255.255.255.0`
+- **Start IP**: `192.168.1.231`
+- **End IP**: `192.168.1.235`
+- **VLAN**: Leave empty (untagged)
+
+---
+
+### 5. Add Resources
+
+#### Pod Configuration
+A pod is a logical grouping of hosts and primary storage that share the same Layer 2 switch and subnet.
+
+![Image](https://github.com/user-attachments/assets/f72e85b1-39ed-4467-a1be-9ac11d87704b)
+
+- **Pod Name**: `pod-20`
+- **Gateway**: `192.168.1.1`
+- **Netmask**: `255.255.255.0`
+- **IP Range**: `192.168.1.236 - 192.168.1.240`
+
+#### VLAN Range (for Guest Traffic)
+
+![Image](https://github.com/user-attachments/assets/afe3c196-74ef-4e83-a311-12d83f638c78)
+
+The VLAN range defines the range of VLAN IDs that can be used for isolating guest network traffic.
+Each guest network can be assigned a unique VLAN ID to maintain traffic separation and improve security.
+
+- **VLAN Range**: `3300-3399`
+
+#### Cluster Configuration
+A cluster is a group of hosts that use the same hypervisor and share access to primary storage.
+
+![Image](https://github.com/user-attachments/assets/5c593c93-f912-414c-8284-a65c4fb3a520)
+
+- **Cluster Name**: `cluster-20`
+
+#### Add Host
+A host is a physical machine that runs the virtual machines.
+
+![Image](https://github.com/user-attachments/assets/e498c962-3e20-4142-bf18-c20e8b65a890)
+
+- **Hostname**: `192.168.1.219` (Server's IP)
+> **Note**: Enter the host's IP address and the username (e.g., `root`).  
+> The password field is required but hidden for security reasons.  
+> Make sure to enter the correct root password even though it won’t be displayed.
+
+#### Primary Storage Configuration
+Primary storage is where all the disk volumes for virtual machines (VMs) are stored. It must be accessible to all hosts in the cluster.
+
+![Image](https://github.com/user-attachments/assets/78cce944-a10c-43d2-b2fa-ddee27ddc48f)
+
+- **Name**: `primary-20`
+- **Scope**: Zone
+- **Protocol**: `nfs`
+- **Server**: `192.168.1.219`
+- **Path**: `/report/primary`
+- **Provider**: `DefaultPrimary`
+
+#### Secondary Storage Configuration
+Secondary storage is used to store VM templates, ISO images, and VM disk volume snapshots. It must also be accessible to all hosts in the zone.
+
+![Image](https://github.com/user-attachments/assets/974a4d4f-92b7-4de7-ac35-5b9332a958d8)
+
+- **Provider**: `NFS`
+- **Name**: `secondary-20`
+- **Server**: `192.168.1.219`
+- **Path**: `/report/secondary`
+
+---
+
+### 6️. Launch
+Launching the zone finalizes the configuration and brings all defined resources (network, hosts, storage, etc.) into an operational state.
+
+- Review configuration
+- Click **Launch Zone**
+- Wait for resources (host, storage, network) to initialize
+
+Once launched, the zone becomes active and available for deploying virtual machines.
+
+---
+
+📸 _Refer to the screenshots in this repo for visual references to each step._
