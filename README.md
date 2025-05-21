@@ -229,44 +229,45 @@ sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
 
-# Setting Up a CloudStack Host with KVM Hypervisor
+# Using KVM Hypervisor to Set Up a CloudStack Host
 
-This guide outlines the steps to configure a CloudStack host using KVM (Kernel-based Virtual Machine) as the hypervisor. It covers the installation of essential packages, network setup, access configuration, and system adjustments to ensure compatibility with the CloudStack Management Server.
+The procedures for configuring a CloudStack host with KVM (Kernel-based Virtual Machine) as the hypervisor are described in this document. In order to guarantee compatibility with the CloudStack Management Server, it covers the installation of necessary packages, network setup, access configuration, and system modifications.
 
 ---
 
-## Install KVM and CloudStack Agent
+## Set up CloudStack Agent and KVM
+
 ```bash
 apt-get install qemu-kvm cloudstack-agent -y
 ```
 
 ---
 
-## Adjusting Configuration Files
+## Modifying Configuration Documents
 
-### Enable VNC to Listen on All Interfaces
+### Allow VNC to Hear on Every Interface
 
 ```bash
 sed -i -e 's/\#vnc_listen.*$/vnc_listen = "0.0.0.0"/g' /etc/libvirt/qemu.conf
 ```
 
-This command updates the `qemu.conf` file by replacing the commented line for `vnc_listen` with an active line that sets it to listen on all IP addresses.
+This command modifies the `qemu.conf` file by adding an active line that instructs it to listen on all IP addresses in place of the commented line for `vnc_listen`.
 
 ---
 
-### Allow libvirtd to Accept Remote Connections
+### Permit remote connections to libvirtd
 
-On Ubuntu 22.04, modify the default settings for libvirtd to allow it to listen for remote connections:
+To enable libvirtd to listen for remote connections on Ubuntu 22.04, change its default settings:
 
 ```bash
 sed -i.bak 's/^\(LIBVIRTD_ARGS=\).*/\1"--listen"/' /etc/default/libvirtd
 ```
 
-This command replaces the line starting with `LIBVIRTD_ARGS=` to include the `--listen` flag, and creates a backup with the `.bak` extension.
+This command produces a backup with the `.bak` extension and adds the `--listen` flag to the line that begins with `LIBVIRTD_ARGS=`.
 
 ---
 
-## Add TCP Listening Settings for libvirtd
+## Add libvirtd's TCP Listening Settings
 
 ```bash
 echo 'listen_tls=0' >> /etc/libvirt/libvirtd.conf
@@ -276,27 +277,27 @@ echo 'mdns_adv = 0' >> /etc/libvirt/libvirtd.conf
 echo 'auth_tcp = "none"' >> /etc/libvirt/libvirtd.conf
 ```
 
-These commands configure the `libvirtd.conf` file to:
-- Disable TLS connections
-- Enable TCP connections
-- Set TCP port to `16509`
-- Turn off mDNS advertisements
-- Disable authentication over TCP
+The `libvirtd.conf` file is configured by these instructions to:
+- Turn off TLS connections.
+- Make TCP connections available.
+- TCP port should be set to `16509`.
+- Switch off the mDNS ads.
+- Turn off TCP authentication.
 
 ---
 
-## Restart libvirtd and Mask Unused Sockets
+## Mask Unused Sockets and Restart libvirtd
 
 ```bash
 systemctl mask libvirtd.socket libvirtd-ro.socket libvirtd-admin.socket libvirtd-tls.socket libvirtd-tcp.socket
 systemctl restart libvirtd
 ```
 
-Masking prevents unwanted libvirtd socket units from starting. Restarting the service applies all new configuration changes.
+Unwanted libvirtd socket units are kept from launching by masking. All new configuration modifications are applied when the service is restarted.
 
 ---
 
-## System Settings for Docker and Bridged Networking
+## Docker with Bridged Networking System Configurations
 
 ```bash
 echo "net.bridge.bridge-nf-call-arptables = 0" >> /etc/sysctl.conf
@@ -304,11 +305,11 @@ echo "net.bridge.bridge-nf-call-iptables = 0" >> /etc/sysctl.conf
 sysctl -p
 ```
 
-These settings ensure bridged network packets aren't unnecessarily filtered by arptables or iptables.
+These configurations make guarantee that arptables and iptables don't filter bridged network packets needlessly.
 
 ---
 
-## Generate Unique Host UUID
+## Create an Individual Host UUID
 
 ```bash
 apt-get install uuid -y
@@ -317,11 +318,11 @@ echo host_uuid = \"$UUID\" >> /etc/libvirt/libvirtd.conf
 systemctl restart libvirtd
 ```
 
-This ensures that each host has a unique identifier, which is essential in environments with multiple virtual hosts.
+This guarantees that every host has a unique identity, which is crucial in settings where there are several virtual hosts.
 
 ---
 
-## Configure iptables Firewall Rules
+## Set up firewall rules in iptables
 
 ```bash
 NETWORK=192.168.1.0/24
@@ -342,19 +343,19 @@ iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j ACCEP
 #iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 3128 -j ACCEPT
 ```
 
-These rules open required ports for communication within the specified network range (`192.168.1.0/24`). They are especially important for services like NFS, CloudStack, and management interfaces.
+For communication within the designated network range (`192.168.1.0/24`), these rules open the necessary ports. They are particularly crucial for administration interfaces, CloudStack, and NFS services.
 
-Make the rules persistent:
+Make the guidelines enduring:
 
 ```bash
 apt-get install iptables-persistent
 ```
 
-Answer `yes` when prompted to save the rules.
+When asked to preserve the rules, select "yes."
 
 ---
 
-## Disable AppArmor Profiles for libvirt
+## Turn off libvirt AppArmor Profiles
 
 ```bash
 ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
@@ -363,7 +364,7 @@ apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
 apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper
 ```
 
-These commands disable AppArmor profiles for the `libvirtd` daemon and its helper tools to prevent restrictions that could interfere with virtualization services.
+To avoid limitations that can disrupt virtualization services, these instructions turn off AppArmor profiles for the `libvirtd` daemon and its companion tools.
 
 ---
 
@@ -375,13 +376,13 @@ systemctl status cloudstack-management
 tail -f /var/log/cloudstack/management/management-server.log
 ```
 
-This sets up and starts the CloudStack management service. Use `tail -f` to live monitor the log and verify when the system is fully operational.
+The CloudStack management service is now configured and operational. To live watch the log and confirm when the system is completely functional, use `tail -f`.
 
 ---
 
-## Access Management Interface
+## Interface for Access Management
 
-Once the service is running, open a web browser and visit:
+After the service has finished, launch a web browser and go to:
 
 ```
 http://<YOUR_IP_ADDRESS>:8080
@@ -390,7 +391,7 @@ http://<YOUR_IP_ADDRESS>:8080
 Example:
 
 ```
-http://100.120.116.80/:8080
+http://100.120.116.80:8080
 ```
 
 ## The CloudStack dashboard should become accessible at this stage.
@@ -399,36 +400,36 @@ http://100.120.116.80/:8080
 
 # Creating A Zone
 
-This guide documents the process of creating a new zone in Apache CloudStack after a successful installation and login. Screenshots are provided in this repository for each major step.
+After a successful installation and login, this tutorial explains how to create a new zone in Apache CloudStack. This repository has screenshots for every significant milestone.
 
 ---
 
 ## Step-by-Step Guide:
 
 ### 1️. Zone Type
-The zone type defines the architecture of the data center.
+The data center's architecture is determined by the zone type.
 
 ![Image](https://github.com/user-attachments/assets/6e00b2af-5d35-46cf-be23-8eaeed7ab9ca)
 
-- Choose zone type:  
+- Select the type of zone:  
   ✅ **Core**  
-  _(The other option is Edge; edge is for simplified setups close to the user)_
+  _(The alternative is Edge, which is for easier setups near the user.)_
 
 ---
 
 ### 2️. Core Zone Type
-Network model determines how networking will be managed in the zone.
+How networking will be managed in the zone is determined by network model.
 
 ![Image](https://github.com/user-attachments/assets/f373538c-709d-4179-be59-62b26b6d2d23)
 
 - Select the network model:  
   ✅ **Advanced**
-  _(The other option is Basic; for this setup we use Advanced for more control and flexibility)_
+  _(The other option is Basic; for greater control and flexibility in this configuration, we pick Advanced.)_
 
 ---
 
 ### 3. Zone Details
-Zone details define the basic identity and networking settings of the zone.
+Zone details specify the zone's fundamental identification and networking configuration.
 
 ![Image](https://github.com/user-attachments/assets/2fc9c721-4b88-47c4-99ce-b81172a06eab)
 
@@ -443,12 +444,12 @@ Zone details define the basic identity and networking settings of the zone.
 ### 4️. Network
 
 #### Physical Network (Default)
-The physical network setting is left at its default configuration because no custom physical layout or hardware-specific settings are required for this setup.
+Since this solution does not require a custom physical layout or hardware-specific settings, the physical network setting is kept at its default configuration.
 
 ![Image](https://github.com/user-attachments/assets/8a7a5ab0-3cc1-4336-94ec-8de48b497716)
 
 #### Public Traffic
-Public traffic settings define how external (public) network access is handled.
+The way external (public) network access is managed is determined by the public traffic settings.
 
 ![Image](https://github.com/user-attachments/assets/84bad439-e77e-429f-a55d-0de6d39d3b3f)
 
@@ -463,7 +464,7 @@ Public traffic settings define how external (public) network access is handled.
 ### 5. Add Resources
 
 #### Pod Configuration
-A pod is a logical grouping of hosts and primary storage that share the same Layer 2 switch and subnet.
+A logical collection of hosts and primary storage that are connected to the same Layer 2 switch and subnet is called a pod.
 
 ![Image](https://github.com/user-attachments/assets/f72e85b1-39ed-4467-a1be-9ac11d87704b)
 
@@ -476,20 +477,20 @@ A pod is a logical grouping of hosts and primary storage that share the same Lay
 
 ![Image](https://github.com/user-attachments/assets/afe3c196-74ef-4e83-a311-12d83f638c78)
 
-The VLAN range defines the range of VLAN IDs that can be used for isolating guest network traffic.
-Each guest network can be assigned a unique VLAN ID to maintain traffic separation and improve security.
+The range of VLAN IDs that can be utilized to isolate network traffic from guests is specified by the VLAN range.
+To keep traffic separate and boost security, each guest network can be given its own VLAN ID.
 
 - **VLAN Range**: `3300-3399`
 
 #### Cluster Configuration
-A cluster is a group of hosts that use the same hypervisor and share access to primary storage.
+A cluster is a collection of hosts that share access to primary storage and run the same hypervisor.
 
 ![Image](https://github.com/user-attachments/assets/5c593c93-f912-414c-8284-a65c4fb3a520)
 
 - **Cluster Name**: `cluster-20`
 
 #### Add Host
-A host is a physical machine that runs the virtual machines.
+The actual device that powers the virtual computers is called a host.
 
 ![Image](https://github.com/user-attachments/assets/e498c962-3e20-4142-bf18-c20e8b65a890)
 
@@ -499,7 +500,7 @@ A host is a physical machine that runs the virtual machines.
 > Make sure to enter the correct root password even though it won’t be displayed.
 
 #### Primary Storage Configuration
-Primary storage is where all the disk volumes for virtual machines (VMs) are stored. It must be accessible to all hosts in the cluster.
+All of the disk volumes for virtual machines (VMs) are kept in primary storage. Every host in the cluster needs to be able to access it.
 
 ![Image](https://github.com/user-attachments/assets/78cce944-a10c-43d2-b2fa-ddee27ddc48f)
 
@@ -511,7 +512,7 @@ Primary storage is where all the disk volumes for virtual machines (VMs) are sto
 - **Provider**: `DefaultPrimary`
 
 #### Secondary Storage Configuration
-Secondary storage is used to store VM templates, ISO images, and VM disk volume snapshots. It must also be accessible to all hosts in the zone.
+ISO images, VM disk volume snapshots, and VM templates are stored on secondary storage. Additionally, all hosts in the zone must be able to access it.
 
 ![Image](https://github.com/user-attachments/assets/974a4d4f-92b7-4de7-ac35-5b9332a958d8)
 
@@ -523,20 +524,18 @@ Secondary storage is used to store VM templates, ISO images, and VM disk volume 
 ---
 
 ### 6️. Launch
-Launching the zone finalizes the configuration and brings all defined resources (network, hosts, storage, etc.) into an operational state.
+When the zone is launched, the configuration is complete and all specified resources—network, hosts, storage, etc.—become operational.
 
-- Review configuration
-- Click **Launch Zone**
-- Wait for resources (host, storage, network) to initialize
+- Examine the setup and select **Launch Zone**.
+- Await the initialization of the host, storage, and network resources.
 
-Once launched, the zone becomes active and available for deploying virtual machines.
+The zone is activated and ready for virtual machine deployment after it is launched.
 
 ---
 
 # Registering an ISO
 
-Once the zone has been successfully created and enabled, the next step is to register an ISO. This ISO will later be used to install virtual machines (VMs) in the zone we just set up.
-
+The next step is to register an ISO when the zone has been successfully created and enabled. Virtual machines (VMs) will thereafter be installed in the zone we just created using this ISO.
 
 ## Navigation Path:
 `Image ➝ ISO ➝ Register ISO`
@@ -546,31 +545,31 @@ Once the zone has been successfully created and enabled, the next step is to reg
 ![Image](https://github.com/user-attachments/assets/e47061eb-9f5c-4535-a597-658277ab7400)
 
 1. **URL**  
-   Enter the direct download link for the ISO:  
+   Enter the ISO's direct download link:  
    `https://releases.ubuntu.com/noble/ubuntu-24.04.2-live-server-amd64.iso`  
 
 2. **Name**  
-   Fill in a descriptive name for the ISO:  `ubuntu-server`
+   Give the ISO a meaningful name:  `ubuntu-server`
 
 3. **Description**  
-   Provide a brief description:  `Ubuntu Server`
+   Give a brief explanation:  `Ubuntu Server`
 
 4. **Direct Download**  
-   Leave this option **disabled** (grey toggle).  
-   > If enabled, CloudStack will automatically fetch the ISO from the URL.
+   This option should remain **disabled** (gray toggle).
+   > CloudStack will automatically retrieve the ISO from the URL if it is enabled.
 
 5. **Zone**  
-   Select the zone that was created earlier: `zone-20`
+   Choose the already created zone: `zone-20`
 
 6. **Bootable**  
-   Enable this option (blue toggle).  
-   > This marks the ISO as bootable so it can be used to install VMs.
-
+   Turn on this feature (blue toggle).  
+   > In order to install virtual machines (VMs), this designates the ISO as bootable.
+   
 7. **OS Type**  
-   Select the appropriate operating system:  `Other Ubuntu (64-bit)`
+   Choose the proper operating system:  `Other Ubuntu (64-bit)`
 
 ---
 
 ## Note:
-All other fields not mentioned above should be **left with their default values** unless there are specific advanced configurations required.
+Unless certain advanced customizations are needed, all other fields not specifically listed above should be **left with their default values**.
 
