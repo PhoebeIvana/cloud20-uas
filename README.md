@@ -229,6 +229,174 @@ sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
 
+# Setting Up a CloudStack Host with KVM Hypervisor
+
+This guide outlines the steps to configure a CloudStack host using KVM (Kernel-based Virtual Machine) as the hypervisor. It covers the installation of essential packages, network setup, access configuration, and system adjustments to ensure compatibility with the CloudStack Management Server.
+
+---
+
+## Install KVM and CloudStack Agent
+```bash
+apt-get install qemu-kvm cloudstack-agent -y
+```
+
+---
+
+## Adjusting Configuration Files
+
+### Enable VNC to Listen on All Interfaces
+
+```bash
+sed -i -e 's/\#vnc_listen.*$/vnc_listen = "0.0.0.0"/g' /etc/libvirt/qemu.conf
+```
+
+This command updates the `qemu.conf` file by replacing the commented line for `vnc_listen` with an active line that sets it to listen on all IP addresses.
+
+---
+
+### Allow libvirtd to Accept Remote Connections
+
+On Ubuntu 22.04, modify the default settings for libvirtd to allow it to listen for remote connections:
+
+```bash
+sed -i.bak 's/^\(LIBVIRTD_ARGS=\).*/\1"--listen"/' /etc/default/libvirtd
+```
+
+This command replaces the line starting with `LIBVIRTD_ARGS=` to include the `--listen` flag, and creates a backup with the `.bak` extension.
+
+---
+
+## Add TCP Listening Settings for libvirtd
+
+```bash
+echo 'listen_tls=0' >> /etc/libvirt/libvirtd.conf
+echo 'listen_tcp=1' >> /etc/libvirt/libvirtd.conf
+echo 'tcp_port = "16509"' >> /etc/libvirt/libvirtd.conf
+echo 'mdns_adv = 0' >> /etc/libvirt/libvirtd.conf
+echo 'auth_tcp = "none"' >> /etc/libvirt/libvirtd.conf
+```
+
+These commands configure the `libvirtd.conf` file to:
+- Disable TLS connections
+- Enable TCP connections
+- Set TCP port to `16509`
+- Turn off mDNS advertisements
+- Disable authentication over TCP
+
+---
+
+## Restart libvirtd and Mask Unused Sockets
+
+```bash
+systemctl mask libvirtd.socket libvirtd-ro.socket libvirtd-admin.socket libvirtd-tls.socket libvirtd-tcp.socket
+systemctl restart libvirtd
+```
+
+Masking prevents unwanted libvirtd socket units from starting. Restarting the service applies all new configuration changes.
+
+---
+
+## System Settings for Docker and Bridged Networking
+
+```bash
+echo "net.bridge.bridge-nf-call-arptables = 0" >> /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-iptables = 0" >> /etc/sysctl.conf
+sysctl -p
+```
+
+These settings ensure bridged network packets aren't unnecessarily filtered by arptables or iptables.
+
+---
+
+## Generate Unique Host UUID
+
+```bash
+apt-get install uuid -y
+UUID=$(uuid)
+echo host_uuid = \"$UUID\" >> /etc/libvirt/libvirtd.conf
+systemctl restart libvirtd
+```
+
+This ensures that each host has a unique identifier, which is essential in environments with multiple virtual hosts.
+
+---
+
+## Configure iptables Firewall Rules
+
+```bash
+NETWORK=192.168.1.0/24
+iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 111 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 111 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 2049 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 32803 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 32769 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 892 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 875 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 662 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8250 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8080 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8443 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 9090 -j ACCEPT
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j ACCEPT
+#iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 3128 -j ACCEPT
+#iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 3128 -j ACCEPT
+```
+
+These rules open required ports for communication within the specified network range (`192.168.1.0/24`). They are especially important for services like NFS, CloudStack, and management interfaces.
+
+Make the rules persistent:
+
+```bash
+apt-get install iptables-persistent
+```
+
+Answer `yes` when prompted to save the rules.
+
+---
+
+## Disable AppArmor Profiles for libvirt
+
+```bash
+ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
+ln -s /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper /etc/apparmor.d/disable/
+apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
+apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper
+```
+
+These commands disable AppArmor profiles for the `libvirtd` daemon and its helper tools to prevent restrictions that could interfere with virtualization services.
+
+---
+
+## Start Apache CloudStack Management Server
+
+```bash
+cloudstack-setup-management
+systemctl status cloudstack-management
+tail -f /var/log/cloudstack/management/management-server.log
+```
+
+This sets up and starts the CloudStack management service. Use `tail -f` to live monitor the log and verify when the system is fully operational.
+
+---
+
+## Access Management Interface
+
+Once the service is running, open a web browser and visit:
+
+```
+http://<YOUR_IP_ADDRESS>:8080
+```
+
+Example:
+
+```
+http://100.120.116.80/:8080
+```
+
+## The CloudStack dashboard should become accessible at this stage.
+![Image](https://github.com/user-attachments/assets/38d0c8d4-f6e4-4ca1-a36a-14c5ce86fe8b)
+
+
 # Creating A Zone
 
 This guide documents the process of creating a new zone in Apache CloudStack after a successful installation and login. Screenshots are provided in this repository for each major step.
