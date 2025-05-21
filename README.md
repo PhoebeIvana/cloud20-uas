@@ -1,9 +1,9 @@
 # Cloud Computing Final Project Install and Configure Apache Cloudstack
 
 ## Group 20:
-- George William Thomas Gonanta - 2206
-- Phoebe Ivana - 2206
-- Kania Aidila Firka - 2206
+- George William Thomas Gonanta - 2206024253
+- Phoebe Ivana - 2206820320
+- Kania Aidila Firka - 2206062983
 - Darren Nathanael Boentara - 2206059490
 ---
 
