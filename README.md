@@ -1,4 +1,6 @@
-# Cloud Computing Final Project Install and Configure Apache Cloudstack
+# FINAL PROJECT: CLOUD COMPUTING
+
+![Image](https://ik.imagekit.io/livxgezjhg/logo%20ui.png?updatedAt=1747858930514)
 
 ## Group 20:
 
@@ -6,6 +8,8 @@
 - Phoebe Ivana - 2206820320
 - Kania Aidilla Firka - 2206062983
 - Darren Nathanael Boentara - 2206059490
+
+## List of Contents
 
 ---
 
