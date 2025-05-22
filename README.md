@@ -67,19 +67,19 @@
 
 ### What is Apache Cloudstack
 
-Apache CloudStack is an open-source Infrastructure as a Service (IaaS) cloud computing platform designed to deploy and manage large networks of virtual machines. It is highly scalable, reliable, and easy to use, making it a popular choice for creating private, public, and hybrid cloud environments.
+Apache CloudStack is an open source Infrastructure as a Service (IaaS) cloud computing platform that is made to deploy and manage a massive virtual machine networks. It is one of the most popular option for developing a private, public, and hybrid cloud environments because of its scalability, dependability, and user-friendliness.
 
-### Why Use Apache Cloudstack
+### Why Choose Apache Cloudstack?
 
-Apache CloudStack is designed to simplify the process of setting up a cloud infrastructure. It abstracts the complexity of physical hardware, networking, and storage, enabling users to provision and manage resources easily through a unified interface.
+The purpose of Apache CloudStack is to make cloud infrastructure setup easier. How? through a single interface. Basically, it simplify users to manage resources by abstracting away the complexity of networking, storage, and physical hardware.
 
 ### Depedencies
 
 - MySQL
-  Apache CloudStack uses MySQL as its primary relational database system to store all configuration data, operational metadata, and system state. This includes user accounts, virtual machine details, network configurations, storage mappings, logs, and job histories.
+  Apache CloudStack uses MySQL for its primary database in storing all the configuration data, operational metadata, and also system state. The stored data also includes the user accounts, virtual machine details, logs, network configuratios, storage mappings, and job histories.
 
 - KVM (Kernel-based Virtual Machine)
-  KVM (Kernel-based Virtual Machine) is a virtualization technology built directly into the Linux kernel that allows a physical server to run multiple virtual machines (VMs) simultaneously, each with its own operating system and resources. KVM is one of the officially supported hypervisors by Apache Cloudtack and is commonly used due to its open-source nature, stability, and native integration with Linux. CloudStack uses KVM to create and manage virtual machines across physical compute nodes (also called hosts) in the cloud infrastructure.
+  KVM (Kernel-based Virtual Machine) is a virtualization technology integrated for the Linux kernel that allow a physical server to operate many virtual machines (VMs) at once. These VMs can have its own operating system and resources. KVM is one of the hypervisors that Apache CloudStack officially supports. This is done because of its stability, open-sorce status, and native Linux integration. KVM is used by CloudStack to build and manage virtual machines on physical computing nodes (hosts), within the cloud infrastruture.
 
 # Step 1: Ubuntu 24.04 LTS Installation
 
@@ -87,11 +87,11 @@ a. Change the SATA operation (driver to AHCI).
 
 b. Download an Ubuntu Image from https://ubuntu.com/download/desktop.
 
-c. Install Ubuntu Desktop by writing the downloaded ISO to a USB stick (you may follow this tutorial: https://etcher.balena.io/)
+c. Install Ubuntu Desktop by writing the downloaded ISO to a USB stick (may follow this tutorial: https://etcher.balena.io/)
 
-d. Insert the USB flash drive to the laptop that you are using, then boot or restart the device. It will automatically recognise the installation media.
+d. Insert the USB flash drive to the laptop that we are using, then boot or restart the device. It will automatically recognise the installation media.
 
-e. Do the usual installation setup, then create your login details.
+e. Do the usual installation setup, then create the login details.
 
 f. The installation process is done.
 
@@ -99,14 +99,14 @@ f. The installation process is done.
 
 ### Modify The Network Configuration File
 
-The first thing you can do is to modify the network configuration file in the /netplan directory. Change the directory to netplan and open the file using this command.
+First, modify the network configuration file in the `/netplan` directory. Change the directory to netplan and open the file using the following command:
 
 ```
 cd /etc/netplan
 sudo nano ./0*.yaml
 ```
 
-Next, edit the YAML file like this.
+The next step is to edit the YAML as follows:
 
 ```
 network:
@@ -135,17 +135,17 @@ network:
 
 ### Apply The Configuration
 
-After modifying the YAML file, apply the configuration with this command.
+After modifying the YAML file, apply the configuration with the following command:
 
 ```
-netplan generate    # Generate configuration files from /etc/netplan/*.yaml
-netplan apply       # Apply the generated network configuration
-reboot              # Restart the system to ensure changes take full effect
+netplan generate    # This will generate a configuration files from /etc/netplan/*.yaml
+netplan apply       # Apply it
+reboot              # Restart the system, just to make sure that the changes is saved already
 ```
 
 # Step 3: Monitoring Tools Installation
 
-First, log in as the root user to ensure you have the necessary administrative privileges.
+On this step, log in as the root user to ensure that we have the necessary administrative privileges.
 
 ```
 su -
@@ -169,10 +169,10 @@ apt install htop lynx duf -y
 apt install bridge-utils
 ```
 
-- **htop** provides a real-time, interactive view of CPU and process usage.
-- **duf** offers a modern and user-friendly overview of disk usage.
-- **lynx** is a lightweight, text-based web browser for use within the terminal.
-- **bridge-utils** is required for managing network bridges, which are useful in virtualization and network configurations.
+- **htop** is a monitoring tools of CPU and process usage.
+- **duf** is amonitoring tools of disk usage.
+- **lynx** is a text-based web browser.
+- **bridge-utils** is a tools for managing network bridges.
 
 # Step 4: SSH Configuration
 
@@ -265,7 +265,7 @@ Deploy a CloudStack database as root and create a user with username "cloud" and
 cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root:<Pasword> -i <Server_IP>
 ```
 
-Make sure **Password** is changed to your **Ubuntu's root password** and **Server_IP** is changed to the **IP Address of your Ubuntu Machine**
+Make sure **Password** is changed to the **Ubuntu's root password** and **Server_IP** is changed to the **IP Address of the Ubuntu Machine**
 
 ### Configure NFS (Network File System) Server
 
@@ -463,7 +463,7 @@ http://100.120.116.80:8080
 
 # Creating A Zone
 
-After a successful installation and login, this tutorial explains how to create a new zone in Apache CloudStack. This repository has screenshots for every significant milestone.
+Following a successful installation and login, this tutorial describes creating a new zone in Apache CloudStack. This repository contains screenshots for each significant achievement.
 
 ---
 
@@ -471,31 +471,31 @@ After a successful installation and login, this tutorial explains how to create 
 
 ### 1️. Zone Type
 
-The data center's architecture is determined by the zone type.
+The type of zone determines the data center’s architecture.
 
 ![Image](https://github.com/user-attachments/assets/6e00b2af-5d35-46cf-be23-8eaeed7ab9ca)
 
-- Select the type of zone:  
+Choose the following one core types of zone:
   ✅ **Core**  
-  _(The alternative is Edge, which is for easier setups near the user.)_
+  _(Edge is the alternative which is meant for simpler configurations closer to the end user)_
 
 ---
 
 ### 2️. Core Zone Type
 
-How networking will be managed in the zone is determined by network model.
+Network model defines how networking will be done in the zone.
 
 ![Image](https://github.com/user-attachments/assets/f373538c-709d-4179-be59-62b26b6d2d23)
 
-- Select the network model:  
+Choose the network model:
   ✅ **Advanced**
-  _(The other option is Basic; for greater control and flexibility in this configuration, we pick Advanced.)_
+  _(The other option is Basic. Considering the need to implement control and flexibility into this configuration, it is chosen Advanced.)_
 
 ---
 
 ### 3. Zone Details
 
-Zone details specify the zone's fundamental identification and networking configuration.
+Zone details capture the fundamental identification of the zone and its corresponding networking configuration.
 
 ![Image](https://github.com/user-attachments/assets/2fc9c721-4b88-47c4-99ce-b81172a06eab)
 
@@ -511,13 +511,13 @@ Zone details specify the zone's fundamental identification and networking config
 
 #### Physical Network (Default)
 
-Since this solution does not require a custom physical layout or hardware-specific settings, the physical network setting is kept at its default configuration.
+As no custom layout or hardware specific features are needed, the setting is maintained at default.  
 
 ![Image](https://github.com/user-attachments/assets/8a7a5ab0-3cc1-4336-94ec-8de48b497716)
 
 #### Public Traffic
 
-The way external (public) network access is managed is determined by the public traffic settings.
+Controls on how public network access is provided is configured by the public traffic settings.
 
 ![Image](https://github.com/user-attachments/assets/84bad439-e77e-429f-a55d-0de6d39d3b3f)
 
@@ -533,7 +533,7 @@ The way external (public) network access is managed is determined by the public 
 
 #### Pod Configuration
 
-A logical collection of hosts and primary storage that are connected to the same Layer 2 switch and subnet is called a pod.
+Pod is a term that refers to a logical group of hosts and primary storage that are interconnected with the same Layer 2 switch and subnet.  
 
 ![Image](https://github.com/user-attachments/assets/f72e85b1-39ed-4467-a1be-9ac11d87704b)
 
@@ -546,14 +546,13 @@ A logical collection of hosts and primary storage that are connected to the same
 
 ![Image](https://github.com/user-attachments/assets/afe3c196-74ef-4e83-a311-12d83f638c78)
 
-The range of VLAN IDs that can be utilized to isolate network traffic from guests is specified by the VLAN range.
-To keep traffic separate and boost security, each guest network can be given its own VLAN ID.
+The VLAN range describes the limit of VLAN ID’s that can be used to merge network traffic from guests. To maintain segregation and increase security, each guest network can be assigned a separate VLAN ID.
 
 - **VLAN Range**: `3300-3399`
 
 #### Cluster Configuration
 
-A cluster is a collection of hosts that share access to primary storage and run the same hypervisor.
+Cluster is defined as a set of hosts having common access to primary storage and running the same hypervisor.
 
 ![Image](https://github.com/user-attachments/assets/5c593c93-f912-414c-8284-a65c4fb3a520)
 
@@ -561,18 +560,18 @@ A cluster is a collection of hosts that share access to primary storage and run 
 
 #### Add Host
 
-The actual device that powers the virtual computers is called a host.
+Host is the underlying physical system that arms the virtual machines with computing resources.
 
 ![Image](https://github.com/user-attachments/assets/e498c962-3e20-4142-bf18-c20e8b65a890)
 
 - **Hostname**: `192.168.1.219` (Server's IP)
-  > **Note**: Enter the host's IP address and the username (e.g., `root`).  
-  > The password field is required but hidden for security reasons.  
-  > Make sure to enter the correct root password even though it won’t be displayed.
+  > **Note**: For the host use the IP address and username set to root, for example.  
+  > The password is optional and invisible due to security norms. 
+  > Though the password is not visible, the correct root password should still be entered.
 
 #### Primary Storage Configuration
 
-All of the disk volumes for virtual machines (VMs) are kept in primary storage. Every host in the cluster needs to be able to access it.
+Virtual Machines (VMs) have their disk volumes stored in primary storage. Each host in the cluster must have access to it.
 
 ![Image](https://github.com/user-attachments/assets/78cce944-a10c-43d2-b2fa-ddee27ddc48f)
 
