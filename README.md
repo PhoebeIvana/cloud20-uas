@@ -13,54 +13,66 @@
 
 ---
 
-- [Introduction](#introduction)
-  - [What is Apache Cloudstack](#what-is-apache-cloudstack)
-  - [Why Use Apache Cloudstack](#why-use-apache-cloudstack)
-  - [Depedencies](#depedencies)
-- [Step 1: Ubuntu 24.04 LTS Installation](#step-1-ubuntu-2404-lts-installation)
-- [Step 2: Network Configuration](#step-2-network-configuration)
-  - [Modify The Network Configuration File](#modify-the-network-configuration-file)
-  - [Apply The Configuration](#apply-the-configuration)
-- [Step 3: Monitoring Tools Installation](#step-3-monitoring-tools-installation)
-  - [Update System Packages](#update-system-packages)
-  - [Install Monitoring and Utility Tools](#install-monitoring-and-utility-tools)
-- [Step 4: SSH Configuration](#step-4-ssh-configuration)
-  - [Install OpenSSH Server](#install-openssh-server)
-  - [Enable SSH root login](#enable-ssh-root-login)
-- [Step 5: Apache CloudStack and MySQL Installation](#step-5-apache-cloudstack-and-mysql-installation)
-  - [Apache CloudStack Installation](#apache-cloudstack-installation)
-    - [Import Apache CloudStack Repositories Key](#import-apache-cloudstack-repositories-key)
-    - [Install Apache CloudStack and MySQL Server](#install-apache-cloudstack-and-mysql-server)
-  - [MySQL Installation](#mysql-installation)
-    - [Configure MySQL](#configure-mysql)
-    - [Configure NFS (Network File System) Server](#configure-nfs-network-file-system-server)
-  - [MySQL Installation](#mysql-installation)
-- [Step 6: Creating a Zone](#creating-a-zone)
-  - [Fill the Zone Type Section](#1️-zone-type)
-  - [Fill the Core Zone Type Section](#2️-core-zone-type)
-  - [Fill the Zone Details Section](#3-zone-details)
-  - [Fill the Network Section](#4️-network)
-    - [Defining its Physical Network](#physical-network-default)
-    - [Defining its Public Traffic](#public-traffic)
-  - [Adding the Resources](#5-add-resources)
-    - [Fill the Pod Configuration](#pod-configuration)
-    - [Fill the VLAN Range](#vlan-range-for-guest-traffic)
-    - [Fill the Cluster Configuration](#cluster-configuration)
-    - [Add A Host](#add-host)
-    - [Set the Primary Storage Configuration](#primary-storage-configuration)
-    - [Set the Secondary Storage Configuration](#secondary-storage-configuration)
-- [Step 7: Registering an ISO](#registering-an-iso)
-- [Registering an ISO](#registering-an-iso)
-- [Step 8: Creating an Instance](#creating-an-instance)
-  - [Go to Instances, then Click Add Instance +](#1-go-to-instances-then-click-add-instance-)
-  - [Select a Deployment Infrastructure](#2-select-a-deployment-infrastructure)
-  - [Select a Template/ISO](#3-select-a-templateiso)
-  - [Select the Computing Offering and Disk Size](#4-select-the-computing-offering-and-disk-size)
-  - [Select the Network](#5-select-the-network)
-  - [Launch](#6-launch)
-- [Step 9: Configure the VM's Network](#configure-the-vms-network)
-- [Step 10: Setup the Port Forwarding](#setup-the-port-forwarding)
-- [Step 11: Setup the Firewall](#setup-the-firewall)
+- [Introduction](#introduction)  
+  - [What is Apache Cloudstack](#what-is-apache-cloudstack)  
+  - [Why Choose Apache Cloudstack](#why-choose-apache-cloudstack)  
+  - [Dependencies](#dependencies)  
+- [Step 1: Ubuntu 24.04 LTS Installation](#step-1-ubuntu-2404-lts-installation)  
+- [Step 2: Network Configuration](#step-2-network-configuration)  
+  - [Modify The Network Configuration File](#modify-the-network-configuration-file)  
+  - [Apply The Configuration](#apply-the-configuration)  
+- [Step 3: Monitoring Tools Installation](#step-3-monitoring-tools-installation)  
+  - [Update System Packages](#update-system-packages)  
+  - [Install Monitoring and Utility Tools](#install-monitoring-and-utility-tools)  
+- [Step 4: SSH Configuration](#step-4-ssh-configuration)  
+  - [Install OpenSSH Server](#install-openssh-server)  
+  - [Enable SSH root login](#enable-ssh-root-login)  
+- [Step 5: Apache CloudStack and MySQL Installation](#step-5-apache-cloudstack-and-mysql-installation)  
+  - [Apache CloudStack Installation](#apache-cloudstack-installation)  
+    - [Import Apache CloudStack Repositories Key](#import-apache-cloudstack-repositories-key)  
+    - [Install Apache CloudStack and MySQL Server](#install-apache-cloudstack-and-mysql-server)  
+  - [MySQL Installation](#mysql-installation)  
+    - [Configure MySQL](#configure-mysql)  
+    - [Configure NFS (Network File System) Server](#configure-nfs-network-file-system-server)  
+- [Step 6: Using KVM Hypervisor to Set Up a CloudStack Host](#step-6-using-kvm-hypervisor-to-set-up-a-cloudstack-host)  
+  - [Set up CloudStack Agent and KVM](#set-up-cloudstack-agent-and-kvm)  
+  - [Modify Configuration Files](#modify-configuration-files)  
+    - [Allow VNC to Listen on All Interfaces](#allow-vnc-to-listen-on-all-interfaces)  
+    - [Permit Remote libvirtd Connections](#permit-remote-libvirtd-connections)  
+    - [Enable libvirtd TCP Settings](#enable-libvirtd-tcp-settings)  
+  - [Mask Unused libvirtd Sockets](#mask-unused-libvirtd-sockets)  
+  - [Docker with Bridged Networking System Configurations](#docker-with-bridged-networking-system-configurations)  
+  - [Create a Unique Host UUID](#create-a-unique-host-uuid)  
+  - [Configure iptables Rules](#set-up-firewall-rules-in-iptables)  
+  - [Disable AppArmor for libvirtd](#turn-off-libvirt-apparmor-profiles)  
+  - [Start Apache CloudStack Management Server](#start-apache-cloudstack-management-server)  
+  - [Access Management Interface](#interface-for-access-management)  
+- [Step 7: Creating a Zone](#step-7-creating-a-zone)  
+  - [Zone Type](#1️-zone-type)  
+  - [Core Zone Type](#2️-core-zone-type)  
+  - [Zone Details](#3-zone-details)  
+  - [Network](#4️-network)  
+    - [Physical Network](#physical-network-default)  
+    - [Public Traffic](#public-traffic)  
+  - [Add Resources](#5-add-resources)  
+    - [Pod Configuration](#pod-configuration)  
+    - [VLAN Range](#vlan-range-for-guest-traffic)  
+    - [Cluster Configuration](#cluster-configuration)  
+    - [Add Host](#add-host)  
+    - [Primary Storage Configuration](#primary-storage-configuration)  
+    - [Secondary Storage Configuration](#secondary-storage-configuration)  
+  - [Launch](#6️-launch)  
+- [Step 8: Registering an ISO](#step-8-registering-an-iso)  
+- [Step 9: Creating an Instance](#step-9-creating-an-instance)  
+  - [Add Instance](#1-go-to-instances-then-click-add-instance-)  
+  - [Deployment Infrastructure](#2-select-a-deployment-infrastructure)  
+  - [Template/ISO](#3-select-a-templateiso)  
+  - [Computing Offering](#4-select-the-computing-offering-and-disk-size)  
+  - [Network](#5-select-the-network)  
+  - [Launch](#6-launch)  
+- [Step 10: Configure the VM's Network](#step-10-configure-the-vms-network)  
+- [Step 11: Setup the Port Forwarding](#step-11-setup-the-port-forwarding)  
+- [Step 12: Setup the Firewall](#step-12-setup-the-firewall)  
 - [Output](#output)
 
 # Introduction
@@ -291,7 +303,7 @@ sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
 
-# Using KVM Hypervisor to Set Up a CloudStack Host
+# Step 6: Using KVM Hypervisor to Set Up a CloudStack Host
 
 The procedures for configuring a CloudStack host with KVM (Kernel-based Virtual Machine) as the hypervisor are described in this document. In order to guarantee compatibility with the CloudStack Management Server, it covers the installation of necessary packages, network setup, access configuration, and system modifications.
 
@@ -461,7 +473,7 @@ http://100.120.116.80:8080
 
 ![Image](https://github.com/user-attachments/assets/38d0c8d4-f6e4-4ca1-a36a-14c5ce86fe8b)
 
-# Creating A Zone
+# Step 7: Creating A Zone
 
 Following a successful installation and login, this tutorial describes creating a new zone in Apache CloudStack. This repository contains screenshots for each significant achievement.
 
@@ -606,7 +618,7 @@ The zone is activated and ready for virtual machine deployment after it is launc
 
 ---
 
-# Registering an ISO
+# Step 8: Registering an ISO
 
 The next step is to register an ISO when the zone has been successfully created and enabled. Virtual machines (VMs) will thereafter be installed in the zone we just created using this ISO.
 
@@ -650,7 +662,7 @@ Unless certain advanced customizations are needed, all other fields not specific
 
 ---
 
-# Creating an Instance
+# Step 9: Creating an Instance
 
 **The purpose** of creating an instance is to launch a new vVM on top of our infrastructure set up. The instance will utilize our network and storage resources we've already set up in the zone so that we can run services on a cloud.
 
@@ -691,7 +703,7 @@ On this step, choose the network that we have created before during the zone set
 Last, click the `Launch Instance` button, and the result will look something like this.
 ![Image](https://ik.imagekit.io/livxgezjhg/messageImage_1747814722118.jpg?updatedAt=1747856143405)
 
-# Configure the VM's Network
+# Step 10: Configure the VM's Network
 
 After we're done with the previous step, next we should find the network that is used for the current VM, which is `isolated-20`. Then, go to the `Egress Rule` and define two rules:
 
@@ -699,12 +711,12 @@ After we're done with the previous step, next we should find the network that is
 - TCP, set the destination CIDR to `0.0.0.0/0`, allowing the VM to connect with any IP over TCP, such as SSH, HTTP, etc.
   ![Image](https://ik.imagekit.io/livxgezjhg/messageImage_1747814829125.jpg?updatedAt=1747856879630)
 
-# Setup the Port Forwarding
+# Step 11: Setup the Port Forwarding
 
 On this step, we want to allow external access towards the services inside our VM, therefore we should go to `Network`-> `Public IP Addresses` -> `Port Fowarding`. Here, we are adding a rule to forward all the TCP ports from public IP to VM's internal IP (for security purposes).
 ![Image](https://ik.imagekit.io/livxgezjhg/messageImage_1747814941649.jpg?updatedAt=1747857343440)
 
-# Setup the Firewall
+# Step 12: Setup the Firewall
 
 On this step, we want to allow SSH and HTTP/web server access, and therefore we defined the following rules:
 ![Image](https://ik.imagekit.io/livxgezjhg/messageImage_1747815006688.jpg?updatedAt=1747858089238)
