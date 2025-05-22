@@ -1,6 +1,7 @@
 # FINAL PROJECT: CLOUD COMPUTING
+## Department of Electrical Engineering, University of Indonesia
 
-![Image](https://ik.imagekit.io/livxgezjhg/logo%20ui.png?updatedAt=1747858930514)
+![Image](https://ik.imagekit.io/livxgezjhg/images.png?updatedAt=1747889828391)
 
 ## Group 20:
 
@@ -727,3 +728,11 @@ Both are using the same source CIDR (`0.0.0.0/0`), which means SSH and web serve
 
 ![Image](https://ik.imagekit.io/livxgezjhg/Screenshot%202025-05-22%20031155.jpg?updatedAt=1747858327481)
 We successfully access and ran the web server service.
+
+
+--- 
+# References:
+- [Reference 1: YouTube Tutorial Apache CloudStack 4.17 installation on Ubuntu 22.04](https://youtu.be/Ua774I1ZiNg?si=UnqSJDkJGGXmpqR3)  
+- [Reference 2: GitHub Repo CloudStack_Kelompok2](https://github.com/shaniyacamita/CloudStack_Kelompok2)
+- [Reference 3: YouTube Tutorial  Apache Cloudstack 4.18 Installation on Ubuntu Server 22.04 LTS](https://youtu.be/txQTvnF9jk8?si=daXki3rSPsTLLKkY)  
+- [Reference 4: GitHub Repo Install and Configure Apache Cloudstack Private Cloud](https://github.com/AhmadRifqi86/cloudstack-install-and-configure/tree/main/cloudstack-install)
