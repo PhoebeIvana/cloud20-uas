@@ -13,66 +13,66 @@
 
 ---
 
-- [Introduction](#introduction)  
-  - [What is Apache Cloudstack](#what-is-apache-cloudstack)  
-  - [Why Choose Apache Cloudstack](#why-choose-apache-cloudstack)  
-  - [Dependencies](#depedencies)  
-- [Step 1: Ubuntu 24.04 LTS Installation](#step-1-ubuntu-2404-lts-installation)  
-- [Step 2: Network Configuration](#step-2-network-configuration)  
-  - [Modify The Network Configuration File](#modify-the-network-configuration-file)  
-  - [Apply The Configuration](#apply-the-configuration)  
-- [Step 3: Monitoring Tools Installation](#step-3-monitoring-tools-installation)  
-  - [Update System Packages](#update-system-packages)  
-  - [Install Monitoring and Utility Tools](#install-monitoring-and-utility-tools)  
-- [Step 4: SSH Configuration](#step-4-ssh-configuration)  
-  - [Install OpenSSH Server](#install-openssh-server)  
-  - [Enable SSH root login](#enable-ssh-root-login)  
-- [Step 5: Apache CloudStack and MySQL Installation](#step-5-apache-cloudstack-and-mysql-installation)  
-  - [Apache CloudStack Installation](#apache-cloudstack-installation)  
-    - [Import Apache CloudStack Repositories Key](#import-apache-cloudstack-repositories-key)  
-    - [Install Apache CloudStack and MySQL Server](#install-apache-cloudstack-and-mysql-server)  
-  - [MySQL Installation](#mysql-installation)  
-    - [Configure MySQL](#configure-mysql)  
-    - [Configure NFS (Network File System) Server](#configure-nfs-network-file-system-server)  
-- [Step 6: Using KVM Hypervisor to Set Up a CloudStack Host](#step-6-using-kvm-hypervisor-to-set-up-a-cloudstack-host)  
-  - [Set up CloudStack Agent and KVM](#set-up-cloudstack-agent-and-kvm)  
-  - [Modify Configuration Files](#modifying-configuration-documents)  
-    - [Allow VNC to Listen on All Interfaces](#allow-vnc-to-hear-on-every-interface)  
-    - [Permit Remote libvirtd Connections](#permit-remote-connections-to-libvirtd)  
-    - [Enable libvirtd TCP Settings](#add-libvirtds-tcp-listening-settings)  
-  - [Mask Unused libvirtd Sockets](#mask-unused-sockets-and-restart-libvirtd)  
-  - [Docker with Bridged Networking System Configurations](#docker-with-bridged-networking-system-configurations)  
-  - [Create a Unique Host UUID](#create-an-individual-host-uuid)  
-  - [Configure iptables Rules](#set-up-firewall-rules-in-iptables)  
-  - [Disable AppArmor for libvirtd](#turn-off-libvirt-apparmor-profiles)  
-  - [Start Apache CloudStack Management Server](#start-apache-cloudstack-management-server)  
-  - [Access Management Interface](#interface-for-access-management)  
-- [Step 7: Creating a Zone](#step-7-creating-a-zone)  
-  - [Zone Type](#1️-zone-type)  
-  - [Core Zone Type](#2️-core-zone-type)  
-  - [Zone Details](#3-zone-details)  
-  - [Network](#4️-network)  
-    - [Physical Network](#physical-network-default)  
-    - [Public Traffic](#public-traffic)  
-  - [Add Resources](#5-add-resources)  
-    - [Pod Configuration](#pod-configuration)  
-    - [VLAN Range](#vlan-range-for-guest-traffic)  
-    - [Cluster Configuration](#cluster-configuration)  
-    - [Add Host](#add-host)  
-    - [Primary Storage Configuration](#primary-storage-configuration)  
-    - [Secondary Storage Configuration](#secondary-storage-configuration)  
-  - [Launch](#6️-launch)  
-- [Step 8: Registering an ISO](#step-8-registering-an-iso)  
-- [Step 9: Creating an Instance](#step-9-creating-an-instance)  
-  - [Add Instance](#1-go-to-instances-then-click-add-instance-)  
-  - [Deployment Infrastructure](#2-select-a-deployment-infrastructure)  
-  - [Template/ISO](#3-select-a-templateiso)  
-  - [Computing Offering](#4-select-the-computing-offering-and-disk-size)  
-  - [Network](#5-select-the-network)  
-  - [Launch](#6-launch)  
-- [Step 10: Configure the VM's Network](#step-10-configure-the-vms-network)  
-- [Step 11: Setup the Port Forwarding](#step-11-setup-the-port-forwarding)  
-- [Step 12: Setup the Firewall](#step-12-setup-the-firewall)  
+- [Introduction](#introduction)
+  - [What is Apache Cloudstack](#what-is-apache-cloudstack)
+  - [Why Choose Apache Cloudstack](#why-choose-apache-cloudstack)
+  - [Dependencies](#depedencies)
+- [Step 1: Ubuntu 24.04 LTS Installation](#step-1-ubuntu-2404-lts-installation)
+- [Step 2: Network Configuration](#step-2-network-configuration)
+  - [Modify The Network Configuration File](#modify-the-network-configuration-file)
+  - [Apply The Configuration](#apply-the-configuration)
+- [Step 3: Monitoring Tools Installation](#step-3-monitoring-tools-installation)
+  - [Update System Packages](#update-system-packages)
+  - [Install Monitoring and Utility Tools](#install-monitoring-and-utility-tools)
+- [Step 4: SSH Configuration](#step-4-ssh-configuration)
+  - [Install OpenSSH Server](#install-openssh-server)
+  - [Enable SSH root login](#enable-ssh-root-login)
+- [Step 5: Apache CloudStack and MySQL Installation](#step-5-apache-cloudstack-and-mysql-installation)
+  - [Apache CloudStack Installation](#apache-cloudstack-installation)
+    - [Import Apache CloudStack Repositories Key](#import-apache-cloudstack-repositories-key)
+    - [Install Apache CloudStack and MySQL Server](#install-apache-cloudstack-and-mysql-server)
+  - [MySQL Installation](#mysql-installation)
+    - [Configure MySQL](#configure-mysql)
+    - [Configure NFS (Network File System) Server](#configure-nfs-network-file-system-server)
+- [Step 6: Using KVM Hypervisor to Set Up a CloudStack Host](#step-6-using-kvm-hypervisor-to-set-up-a-cloudstack-host)
+  - [Set up CloudStack Agent and KVM](#set-up-cloudstack-agent-and-kvm)
+  - [Modify Configuration Files](#modifying-configuration-documents)
+    - [Allow VNC to Listen on All Interfaces](#allow-vnc-to-hear-on-every-interface)
+    - [Permit Remote libvirtd Connections](#permit-remote-connections-to-libvirtd)
+    - [Enable libvirtd TCP Settings](#add-libvirtds-tcp-listening-settings)
+  - [Mask Unused libvirtd Sockets](#mask-unused-sockets-and-restart-libvirtd)
+  - [Docker with Bridged Networking System Configurations](#docker-with-bridged-networking-system-configurations)
+  - [Create a Unique Host UUID](#create-an-individual-host-uuid)
+  - [Configure iptables Rules](#set-up-firewall-rules-in-iptables)
+  - [Disable AppArmor for libvirtd](#turn-off-libvirt-apparmor-profiles)
+  - [Start Apache CloudStack Management Server](#start-apache-cloudstack-management-server)
+  - [Access Management Interface](#interface-for-access-management)
+- [Step 7: Creating a Zone](#step-7-creating-a-zone)
+  - [Zone Type](#1️-zone-type)
+  - [Core Zone Type](#2️-core-zone-type)
+  - [Zone Details](#3-zone-details)
+  - [Network](#4️-network)
+    - [Physical Network](#physical-network-default)
+    - [Public Traffic](#public-traffic)
+  - [Add Resources](#5-add-resources)
+    - [Pod Configuration](#pod-configuration)
+    - [VLAN Range](#vlan-range-for-guest-traffic)
+    - [Cluster Configuration](#cluster-configuration)
+    - [Add Host](#add-host)
+    - [Primary Storage Configuration](#primary-storage-configuration)
+    - [Secondary Storage Configuration](#secondary-storage-configuration)
+  - [Launch](#6️-launch)
+- [Step 8: Registering an ISO](#step-8-registering-an-iso)
+- [Step 9: Creating an Instance](#step-9-creating-an-instance)
+  - [Add Instance](#1-go-to-instances-then-click-add-instance-)
+  - [Deployment Infrastructure](#2-select-a-deployment-infrastructure)
+  - [Template/ISO](#3-select-a-templateiso)
+  - [Computing Offering](#4-select-the-computing-offering-and-disk-size)
+  - [Network](#5-select-the-network)
+  - [Launch](#6-launch)
+- [Step 10: Configure the VM's Network](#step-10-configure-the-vms-network)
+- [Step 11: Setup the Port Forwarding](#step-11-setup-the-port-forwarding)
+- [Step 12: Setup the Firewall](#step-12-setup-the-firewall)
 - [Output](#output)
 
 # Introduction
@@ -488,8 +488,8 @@ The type of zone determines the data center’s architecture.
 ![Image](https://github.com/user-attachments/assets/6e00b2af-5d35-46cf-be23-8eaeed7ab9ca)
 
 Choose the following one core types of zone:
-  ✅ **Core**  
-  _(Edge is the alternative which is meant for simpler configurations closer to the end user)_
+✅ **Core**  
+ _(Edge is the alternative which is meant for simpler configurations closer to the end user)_
 
 ---
 
@@ -500,8 +500,8 @@ Network model defines how networking will be done in the zone.
 ![Image](https://github.com/user-attachments/assets/f373538c-709d-4179-be59-62b26b6d2d23)
 
 Choose the network model:
-  ✅ **Advanced**
-  _(The other option is Basic. Considering the need to implement control and flexibility into this configuration, it is chosen Advanced.)_
+✅ **Advanced**
+_(The other option is Basic. Considering the need to implement control and flexibility into this configuration, it is chosen Advanced.)_
 
 ---
 
@@ -523,7 +523,7 @@ Zone details capture the fundamental identification of the zone and its correspo
 
 #### Physical Network (Default)
 
-As no custom layout or hardware specific features are needed, the setting is maintained at default.  
+As no custom layout or hardware specific features are needed, the setting is maintained at default.
 
 ![Image](https://github.com/user-attachments/assets/8a7a5ab0-3cc1-4336-94ec-8de48b497716)
 
@@ -545,7 +545,7 @@ Controls on how public network access is provided is configured by the public tr
 
 #### Pod Configuration
 
-Pod is a term that refers to a logical group of hosts and primary storage that are interconnected with the same Layer 2 switch and subnet.  
+Pod is a term that refers to a logical group of hosts and primary storage that are interconnected with the same Layer 2 switch and subnet.
 
 ![Image](https://github.com/user-attachments/assets/f72e85b1-39ed-4467-a1be-9ac11d87704b)
 
@@ -578,7 +578,7 @@ Host is the underlying physical system that arms the virtual machines with compu
 
 - **Hostname**: `192.168.1.219` (Server's IP)
   > **Note**: For the host use the IP address and username set to root, for example.  
-  > The password is optional and invisible due to security norms. 
+  > The password is optional and invisible due to security norms.
   > Though the password is not visible, the correct root password should still be entered.
 
 #### Primary Storage Configuration
